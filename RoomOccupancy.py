@@ -1,11 +1,12 @@
-
-# load all data
-data1 = read_csv('datatest.txt', header=0, index_col=1, parse_dates=True, squeeze=True)
-data2 = read_csv('datatraining.txt', header=0, index_col=1, parse_dates=True, squeeze=True)
-data3 = read_csv('datatest2.txt', header=0, index_col=1, parse_dates=True, squeeze=True)
-
+# load the packages
 from pandas import read_csv
+from pandas import concat
 from matplotlib import pyplot
+from pandas import read_csv
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
 # load all data
 data1 = read_csv('datatest.txt', header=0, index_col=1, parse_dates=True, squeeze=True)
 data2 = read_csv('datatraining.txt', header=0, index_col=1, parse_dates=True, squeeze=True)
@@ -24,21 +25,13 @@ for i in range(1, n_features):
 	pyplot.title(data1.columns[i], y=0.5, loc='right')
 pyplot.show()
 
-#Concatenated Dataset
-
-from pandas import read_csv
-from pandas import concat
-# load all data
-data1 = read_csv('datatest.txt', header=0, index_col=1, parse_dates=True, squeeze=True)
-data2 = read_csv('datatraining.txt', header=0, index_col=1, parse_dates=True, squeeze=True)
-data3 = read_csv('datatest2.txt', header=0, index_col=1, parse_dates=True, squeeze=True)
+#Concatenated Datasetz
 # vertically stack and maintain temporal order
 data = concat([data1, data2, data3])
 # drop row number
 data.drop('no', axis=1, inplace=True)
 # save aggregated dataset
 data.to_csv('combined.csv')
-
 
 # load the dataset
 data = read_csv('combined.csv', header=0, index_col=0, parse_dates=True, squeeze=True)
@@ -48,23 +41,6 @@ X, y = values[:, :-1], values[:, -1]
 # split the dataset
 trainX, testX, trainy, testy = train_test_split(X, y, test_size=0.3, shuffle=False, random_state=1)
 
-def naive_prediction(testX, value):
-	return [value for x in range(len(testX))]
-  
-  # naive prediction model
-from pandas import read_csv
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-# load the dataset
-data = read_csv('../datasets/occupancy_data/combined.csv', header=0, index_col=0, parse_dates=True, squeeze=True)
-values = data.values
-# split data into inputs and outputs
-X, y = values[:, :-1], values[:, -1]
-# split the dataset
-trainX, testX, trainy, testy = train_test_split(X, y, test_size=0.3, shuffle=False, random_state=1)
-
-# make a naive prediction
 def naive_prediction(testX, value):
 	return [value for x in range(len(testX))]
 
@@ -80,20 +56,7 @@ for value in [0, 1]:
 #Naive=0 score=0.822
 #Naive=1 score=0.178  
 
-
 # logistic regression
-from pandas import read_csv
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.linear_model import LogisticRegression
-# load the dataset
-data = read_csv('combined.csv', header=0, index_col=0, parse_dates=True, squeeze=True)
-values = data.values
-# split data into inputs and outputs
-X, y = values[:, :-1], values[:, -1]
-# split the dataset
-trainX, testX, trainy, testy = train_test_split(X, y, test_size=0.3, shuffle=False, random_state=1)
 # define the model
 model = LogisticRegression()
 # fit the model on the training set
@@ -107,14 +70,6 @@ print(score)
 
 
 # logistic regression feature selection
-from pandas import read_csv
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.linear_model import LogisticRegression
-# load the dataset
-data = read_csv('combined.csv', header=0, index_col=0, parse_dates=True, squeeze=True)
-values = data.values
 # basic feature selection
 features = [0, 1, 2, 3, 4]
 for f in features:
@@ -131,8 +86,6 @@ for f in features:
 	# evaluate model skill
 	score = accuracy_score(testy, yhat)
 	print('feature=%d, name=%s, score=%.3f' % (f, data.columns[f], score))
-
-
 
 #feature=0, name=Temperature, score=0.799
 #feature=1, name=Humidity, score=0.822
